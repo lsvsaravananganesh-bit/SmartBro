@@ -243,12 +243,19 @@ streakRouter.post('/check-in', async (req: AuthenticatedRequest, res: Response):
     // Milestone evaluations
     const awardMilestone = async (key: string, title: string, description: string) => {
       try {
-        await prisma.streakMilestone.create({
-          data: { studentId, milestoneKey: key, title, description },
+        const existing = await prisma.streakMilestone.findUnique({
+          where: {
+            studentId_milestoneKey: { studentId, milestoneKey: key },
+          },
         });
-        unlockedMilestones.push(title);
+        if (!existing) {
+          await prisma.streakMilestone.create({
+            data: { studentId, milestoneKey: key, title, description },
+          });
+          unlockedMilestones.push(title);
+        }
       } catch (e) {
-        // Already unlocked
+        // Handled cleanly
       }
     };
 
