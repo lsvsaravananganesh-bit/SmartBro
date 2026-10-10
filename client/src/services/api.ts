@@ -1,6 +1,6 @@
 import { User, StudentDashboardData, SubjectSummary, StreakOverviewData, AiChatMessageItem } from '../types';
 
-const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '') + '/api';
+const API_BASE = ((import.meta as ImportMeta & { env?: { VITE_API_URL?: string } }).env?.VITE_API_URL || '').replace(/\/$/, '') + '/api';
 
 class ApiError extends Error {
   constructor(public status: number, message: string, public data?: any) {
